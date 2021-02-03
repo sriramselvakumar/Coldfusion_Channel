@@ -15,6 +15,15 @@
     },
     searchButton: {
         marginLeft: '2%'
+    },
+    cardsLayout: {
+        minHeight: '50vh',
+        width: '80%',
+        margin: 'auto'
+    },
+    spinner: {
+        marginLeft: '50%',
+        marginTop: '15%'
     }
 }
 

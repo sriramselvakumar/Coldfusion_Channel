@@ -1,6 +1,7 @@
 
 
 const {google} = require('googleapis');
+const { pagespeedonline } = require('googleapis/build/src/apis/pagespeedonline');
 require("dotenv").config();
 
 const channelId = "UC4QZ_LsYcvcq7qOsOhpAX4A"
@@ -21,6 +22,20 @@ const returnErr = (code,message) => {
             message
         }
     }
+}
+
+const performPagination = (items,numColumns) => {
+    let paginated = []
+    let elements = 3 * numColumns
+    for(let a = 0; a < items.length; a+=elements){
+        let page = [] 
+        for(let b = a; b < a+elements; b++){
+            if( b == items.length) break
+            else page.push(items[b])
+        }
+        paginated.push(page)
+    }
+    return paginated
 }
 
 module.exports = {
@@ -90,19 +105,30 @@ module.exports = {
     getVideos: async(maxResults) => {
         try {
             maxResults = parseInt(maxResults)
-            const data = await yt.playlistItems.list({
+
+            const {data} = await yt.playlistItems.list({
                 part: [
                     "snippet,contentDetails"
                 ],
                 playlistId,
                 maxResults
             })
+
+            const {items} = data;
+            const paginatedThreeItems = performPagination(items,3)
+            const paginatedFourItems = performPagination(items,4)
+            
             return({
                 code: 200,
-                data
+                data: {
+                    items,
+                    paginatedThreeItems,
+                    paginatedFourItems
+                }
             })
             
         } catch (error) {
+            console.log(error)
             return(
                 returnErr(500,`could not retrieve playlist info for ${playlistId}`)
             )

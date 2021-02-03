@@ -9,7 +9,7 @@ const apiCall = axios.create({
 
 const getVideos = async (maxResults) => {
     const response = await apiCall.get(`/videos/${maxResults}`)
-    return response.data.data.items
+    return response.data
 }
 
 export {getVideos}
