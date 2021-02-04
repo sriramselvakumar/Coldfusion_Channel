@@ -72,7 +72,7 @@ const App = () => {
       numColumns = 3 
     }
     else {
-      result = fourPagination[activeNum-1]
+      result = fourPagination[activeNum-2]
       numColumns = 4
     }
     let cards = []
@@ -107,6 +107,11 @@ const App = () => {
         <div style = {styles.spinner}>
           <Spinner animation="border" variant="danger" />
         </div>
+      )
+    }
+    if(fourPagination.length === 0){
+      return (
+        <h1 style = {{textAlign: 'center' }}>No Search Results :(</h1>
       )
     }
       const cards = pagination() 
