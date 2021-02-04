@@ -29,12 +29,12 @@ const App = () => {
       setLoading(false)
   }
   const onSubmit = async() => {
-      setLoading(true)
+      await setLoading(true)
       const videos = await searchVideos(searchText)
       await  setFourPagination(videos.paginatedFourItems)
       await setThreePagination(videos.paginatedThreeItems)
-      setLoading(false)
-      setActiveNum(1)
+      await setActiveNum(1)
+      await setLoading(false)
   }
 
   const videoClick = (videoId) => {
