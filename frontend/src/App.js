@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import {Navbar,Jumbotron,Spinner,CardColumns, CardDeck} from 'react-bootstrap'
+import {Navbar,Jumbotron,Spinner, CardDeck} from 'react-bootstrap'
 import Searchbar from './Components/Searchbar'
 import styles from './styles'
 import {getVideos, searchVideos} from './api'
@@ -63,6 +63,44 @@ const App = () => {
     return result
   }
 
+
+  const pagination = () => {
+    let result = null
+    let numColumns = 0 
+    if(useThree) {
+      result = threePagination[activeNum-1]
+      numColumns = 3 
+    }
+    else {
+      result = fourPagination[activeNum-1]
+      numColumns = 4
+    }
+    let cards = []
+  
+    for(let a = 0; a < result.length;a+=numColumns){
+      let row = []
+      for(let b = a; b < a+numColumns; b++) {
+        if(b == result.length) break 
+        const item = result[b]
+        row.push(
+          <Card 
+            title = {item.snippet.title}
+            description = {splitter(item.snippet.description,236)}
+            thumbnail = {item.snippet.thumbnails.medium.url}
+            videoId = {item.contentDetails.videoId}
+            onVideoClick = {videoClick}
+          />
+        )
+      }
+      cards.push(
+        <CardDeck style = {{marginTop: '2%', justifyContent: 'center'}}>
+          {row}
+        </CardDeck>
+      )
+    }
+    return cards
+  }
+
   const conditionalDisplay = () => {
     if(loading) {
       return (
@@ -71,55 +109,7 @@ const App = () => {
         </div>
       )
     }
-    
-      let result = null
-      if(useThree) result = threePagination[activeNum-1]
-      else result = fourPagination[activeNum-1]
-      let cards = []
-      if(useThree) {
-        for(let item of result){
-          const {title,description,thumbnails} = item.snippet
-          cards.push((
-            <div style = {{marginLeft: '20%'}}>
-            <Card 
-            title = {title}
-            description = {splitter(description,236)}
-            thumbnail = {thumbnails.medium.url}
-            videoId = {item.contentDetails.videoId}
-            onVideoClick = {videoClick}
-            />
-            </div>
-          ))
-        }
-        return (
-          <CardColumns>
-            <div>
-            {cards}
-            </div>
-          </CardColumns>
-        ) 
-      }
-      for(let a = 0; a < result.length;a+=4){
-        let row = []
-        for(let b = a; b < a+4; b++) {
-          if(b == result.length) break 
-          const item = result[b]
-          row.push(
-            <Card 
-              title = {item.snippet.title}
-              description = {splitter(item.snippet.description,236)}
-              thumbnail = {item.snippet.thumbnails.medium.url}
-              videoId = {item.contentDetails.videoId}
-              onVideoClick = {videoClick}
-            />
-          )
-        }
-        cards.push(
-          <CardDeck style = {{marginTop: '2%'}}>
-            {row}
-          </CardDeck>
-        )
-      }
+      const cards = pagination() 
       return (
         <div>
           {cards}

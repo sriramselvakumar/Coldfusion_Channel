@@ -19,7 +19,7 @@
     cardsLayout: {
         minHeight: '50vh',
         width: '80%',
-        margin: 'auto'
+        margin: 'auto',
     },
     spinner: {
         marginLeft: '50%',
