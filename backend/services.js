@@ -128,9 +128,74 @@ module.exports = {
             })
             
         } catch (error) {
-            console.log(error)
             return(
                 returnErr(500,`could not retrieve playlist info for ${playlistId}`)
+            )
+        }
+    },
+    searchVideos: async(searchText) => {
+        try {
+            const retrieveVideos = async(pageToken) => {
+                let obj=  null
+                if(pageToken) {
+                    obj = {
+                        part: [
+                            'snippet,contentDetails'
+                        ],
+                        playlistId,
+                        maxResults: 50,
+                        pageToken
+                    }
+                }
+                else {
+                    obj = {
+                        part: [
+                            'snippet,contentDetails'
+                        ],
+                        playlistId,
+                        maxResults: 50
+                    }
+                }
+                const {data} = await yt.playlistItems.list(obj) 
+
+                const {items,nextPageToken} = data
+                return ({
+                    nextPageToken,
+                    items
+                })
+            }
+
+            const response = await retrieveVideos()
+            let list = [...response.items] 
+            let nextToken = response.nextPageToken
+            while(nextToken){
+                const res = await retrieveVideos(nextToken)
+                nextToken = res.nextPageToken
+                list.push(...res.items)
+            }
+
+            let searchedList = []
+            for(let item of list){
+                const {title} = item.snippet
+                if(title.toLowerCase().includes(searchText.toLowerCase())) searchedList.push(item)
+            }
+
+            const paginatedThreeItems = performPagination(searchedList,3)
+            const paginatedFourItems = performPagination(searchedList,4)
+            
+            return({
+                code: 200,
+                data: {
+                    items: searchedList,
+                    paginatedThreeItems,
+                    paginatedFourItems
+                }
+            })    
+            
+        } catch (error) {
+            console.log(error)
+            return(
+                returnErr(500,`could not get search results for ${searchText}`)
             )
         }
     }

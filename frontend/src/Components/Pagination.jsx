@@ -1,5 +1,5 @@
 import {Pagination} from 'react-bootstrap'
-import React, { useState } from 'react';
+import React from 'react';
 
 
 const Paginator = (props) => {
@@ -17,7 +17,10 @@ const Paginator = (props) => {
         return items
     }
     return ( 
-        <Pagination style = {{marginLeft: '50%'}} size="sm">{renderItems()}</Pagination>
+        
+            <Pagination style = {{justifyContent: 'center'}} size="sm">{renderItems()}</Pagination>
+        
+        
      );
 }
  

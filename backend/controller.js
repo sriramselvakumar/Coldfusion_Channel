@@ -21,5 +21,10 @@ module.exports = {
         const {maxResults} = req.params
         const {code,data} = await services.getVideos(maxResults)
         res.status(code).send(data)
+    },
+    searchVideos: async(req,res) => {
+        const {searchText} = req.params
+        const {code,data} = await services.searchVideos(searchText)
+        res.status(code).send(data)
     }
 }

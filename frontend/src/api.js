@@ -12,5 +12,10 @@ const getVideos = async (maxResults) => {
     return response.data
 }
 
-export {getVideos}
+const searchVideos = async(searchText) => {
+    const response = await apiCall.get(`/searchvideos/${searchText}`)
+    return response.data
+}
+
+export {getVideos,searchVideos}
 
